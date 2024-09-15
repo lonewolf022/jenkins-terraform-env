@@ -49,7 +49,7 @@ pipeline {
                           required_providers {
                             azurerm = {
                               source  = "hashicorp/azurerm"
-                              version = "${params.AZ_PV_VERSION}"
+                              version = "~> ${params.AZ_PV_VERSION}"
                             }
                           }
                         }
