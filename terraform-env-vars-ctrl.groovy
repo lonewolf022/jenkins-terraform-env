@@ -38,14 +38,14 @@ pipeline {
                     def versionFile = 'version.tf'
 
                     if (fileExists(versionFile)) {
-                        sh "sed -i 's/version = \".*\"/version = \"${PROVIDER_VERSION}\"/' ${versionFile}"
+                        sh "sed -i 's/version = \".*\"/version = \"${AZ_PV_VERSION}\"/' ${versionFile}"
                     } else {
                         writeFile file: versionFile, text: """
                         terraform {
                           required_providers {
                             azurerm = {
                               source  = "hashicorp/azurerm"
-                              version = "${PROVIDER_VERSION}"
+                              version = "${AZ_PV_VERSION}"
                             }
                           }
                         }
