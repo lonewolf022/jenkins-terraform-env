@@ -23,11 +23,15 @@ pipeline {
         
         stage('Install Terraform') {
             steps {
+                script {
+                    echo "Check Terraform version: ${TF_VERSION}"
+                    echo "Check Terraform version: ${params.TF_VERSION}"
+                }
                 sh """
-                wget https://releases.hashicorp.com/terraform/${params.TF_VERSION}/terraform_${params.TF_VERSION}_linux_amd64.zip
-                unzip terraform_${params.TF_VERSION}_linux_amd64.zip
-                mv terraform /usr/local/bin/
-                terraform version
+                    ls -l terraform_${params.TF_VERSION}_linux_amd64.zip || wget https://releases.hashicorp.com/terraform/"${params.TF_VERSION}"/terraform_"${params.TF_VERSION}"_linux_amd64.zip
+                    unzip -o terraform_"${params.TF_VERSION}"_linux_amd64.zip
+                    pwd
+                    ./terraform version
                 """
             }
         }
@@ -57,20 +61,17 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                sh 'terraform init'
+                sh './terraform init'
             }
         }
 
-        // stage('Terraform Plan') {
-        //     steps {
-        //         sh 'terraform plan'
-        //     }
-        // }
-
-        // stage('Terraform Apply') {
-        //    steps {
-        //        sh 'terraform apply -auto-approve'
-        //    }
-        // }
+    }
+    
+    post {
+        always {
+            script {
+                deleteDir()
+            }
+        }
     }
 }
