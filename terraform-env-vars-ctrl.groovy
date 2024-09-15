@@ -23,12 +23,12 @@ pipeline {
         
         stage('Install Terraform') {
             steps {
-                sh '''
-                wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
-                unzip terraform_${TF_VERSION}_linux_amd64.zip
+                sh """
+                wget https://releases.hashicorp.com/terraform/${params.TF_VERSION}/terraform_${params.TF_VERSION}_linux_amd64.zip
+                unzip terraform_${params.TF_VERSION}_linux_amd64.zip
                 mv terraform /usr/local/bin/
                 terraform version
-                '''
+                """
             }
         }
 
@@ -38,14 +38,14 @@ pipeline {
                     def versionFile = 'version.tf'
 
                     if (fileExists(versionFile)) {
-                        sh "sed -i 's/version = \".*\"/version = \"${AZ_PV_VERSION}\"/' ${versionFile}"
+                        sh "sed -i 's/version = \".*\"/version = \"${params.AZ_PV_VERSION}\"/' ${versionFile}"
                     } else {
                         writeFile file: versionFile, text: """
                         terraform {
                           required_providers {
                             azurerm = {
                               source  = "hashicorp/azurerm"
-                              version = "${AZ_PV_VERSION}"
+                              version = "${params.AZ_PV_VERSION}"
                             }
                           }
                         }
